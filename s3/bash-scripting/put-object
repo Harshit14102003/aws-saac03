@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+echo "Putting files to an S3 bucket"
+
+# Check if the bucket name is passed as an argument
+if [ -z "$1" ]; then
+  echo "Bucket name is not provided or is empty"
+  exit 1
+fi
+
+BUCKET_NAME="$1"
+
+# Create 5 random files
+for i in {1..5}
+do
+  FILENAME="random_file_$i.txt"
+  
+  # Generate a random file with 1000 bytes of random data
+  head -c 1000 /dev/urandom > "$FILENAME"
+  
+  # Upload the file to the S3 bucket using put-object
+  aws s3api put-object \
+    --bucket "$BUCKET_NAME" \
+    --key "$FILENAME" \
+    --body "$FILENAME"
+  
+  # Check if the upload succeeded
+  if [ $? -eq 0 ]; then
+    echo "Uploaded $FILENAME to s3://$BUCKET_NAME/"
+  else
+    echo "Failed to upload $FILENAME"
+  fi
+  
+  # Clean up the local random file
+  rm "$FILENAME"
+done

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+echo "Creating an S3 bucket"    
+# Check if the first argument is provided
+if [ -z "$1" ]; then
+  echo "Bucket name is not provided or is empty"
+  exit 1  # Exit with a non-zero status to indicate an error
+fi
+
+# Set the bucket name from the command-line argument
+BUCKET_NAME="$1"
+
+# Create the S3 bucket with error handling
+aws s3api create-bucket \
+ --bucket "$BUCKET_NAME" \
+ --create-bucket-configuration="LocationConstraint=eu-north-1" \
+ --query "Location" \
+ --output text
+
