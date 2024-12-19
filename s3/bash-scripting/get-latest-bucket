@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "Fetching the latest bucket name"
+
+LATEST_BUCKET=$(aws s3api list-buckets --query "Buckets | sort_by(@, &CreationDate)[-1].Name" --output text)
+
+echo "The latest bucket is: $LATEST_BUCKET"
