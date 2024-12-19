@@ -1,1 +1,37 @@
 #!/usr/bin/env bash
+
+echo "Syncing files in an S3 bucket"    
+# Check if the bucket name is passed as an argument
+if [ -z "$1" ]; then
+  echo "Bucket name is not provided or is empty"
+  exit 1
+fi
+
+BUCKET_NAME="$1"
+TEMP_DIR="temp_files"  # Temporary directory to store random files
+
+# Create a temporary directory for the random files
+mkdir -p "$TEMP_DIR"
+
+# Create 5 random files
+for i in {1..5}
+do
+  FILENAME="random_file_$i.txt"
+  
+  # Generate a random file with 1000 bytes of random data
+  head -c 1000 /dev/urandom > "$TEMP_DIR/$FILENAME"
+done
+
+# Sync the files to the S3 bucket
+aws s3 sync "$TEMP_DIR" "s3://$BUCKET_NAME/"
+
+# Check if the sync succeeded
+if [ $? -eq 0 ]; then
+  echo "Files successfully synced to s3://$BUCKET_NAME/"
+else
+  echo "Failed to sync files"
+  exit 1
+fi
+
+# Clean up the temporary directory
+rm -rf "$TEMP_DIR"
