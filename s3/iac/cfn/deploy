@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo "Deploying a CloudFormation deployment package"
+STACK_NAME="cfn-s3-simple"
+TEMPLATE_FILE="template.yaml"
+aws cloudformation deploy \
+    --stack-name "$STACK_NAME" \
+    --no-execute-changeset \
+    --template-file "$TEMPLATE_FILE"
