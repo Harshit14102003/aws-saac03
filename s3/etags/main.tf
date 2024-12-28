@@ -20,4 +20,6 @@ resource "aws_s3_object" "object" {
   key    = "myfile.txt"
   source = "myfile.txt"
 
+  etag=filemd5("myfile.txt")
+
 }
